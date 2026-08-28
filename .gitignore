@@ -1,0 +1,16 @@
+# Cloudflare Wrangler
+.wrangler/
+
+# macOS
+.DS_Store
+
+# Node
+node_modules/
+npm-debug.log*
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~

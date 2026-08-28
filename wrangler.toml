@@ -1,0 +1,20 @@
+name = "field-market-orders"
+main = "worker.js"
+compatibility_date = "2026-08-28"
+
+[assets]
+directory = "public"
+binding = "ASSETS"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "field-market-orders"
+database_id = "dd55ca41-a35e-4cc0-af9a-37a861fff940"
+
+[[kv_namespaces]]
+binding = "CACHE"
+id = "fbcf5af690414cf1b6313e5a3816dcf6"
+
+[[r2_buckets]]
+binding = "IMAGES"
+bucket_name = "field-market-order-images"
