@@ -56,6 +56,8 @@ offline-order-website/
 ### 商品管理
 - 每个活动下可创建多个商品
 - 商品可编辑名称、价格（存储为分）、图片（上传至 R2）
+- 图片在编辑弹窗内上传、预览、移除；替换或移除时自动清理旧 R2 对象
+- 商品可删除（软删除 active=0，不再显示在销售列表）
 - 商品卡片为横向布局：左侧正方形图片，右侧名称、价格和数量步进器
 
 ### 订单录入
@@ -70,11 +72,13 @@ offline-order-website/
 - 可累加模式：`数量 = floor(净额 / 门槛)`
 - 不可累加模式：取已满足条件中的最高门槛，数量为 1
 - 未达到满赠时不显示满赠内容
+- 管理员可在活动编辑页添加 / 编辑 / 删除满赠规则（软删除）
+- 提交订单时由服务端按规则权威重算，满赠快照写入 `order_gifts` 表
 
 ### 订单管理
 - 订单可取消（软删除，状态变为 cancelled）
 - 取消的订单不计入销售统计，但保留审计记录
-- 订单记录包含商品名称和价格快照（历史准确性）
+- 订单记录包含商品名称和价格快照、满赠名称与数量快照（历史准确性）
 
 ### 国际化 (i18n)
 - 支持简体中文 (zh-CN)、繁体中文 (zh-TW)、英语 (en)、日语 (ja)
@@ -155,6 +159,9 @@ npx wrangler deploy  # 部署 Worker + 静态资源
 | POST | `/api/events/:id/products` | 添加商品 |
 | PATCH | `/api/products/:id` | 编辑商品 |
 | DELETE | `/api/products/:id` | 删除商品 |
+| POST | `/api/events/:id/gifts` | 添加满赠规则 |
+| PATCH | `/api/gifts/:id` | 编辑满赠规则 |
+| DELETE | `/api/gifts/:id` | 删除满赠规则（软删除） |
 | GET | `/api/events/:id/members` | 活动成员列表 |
 | POST | `/api/events/:id/members` | 添加成员 |
 | DELETE | `/api/events/:id/members/:userId` | 移除成员 |
