@@ -65,6 +65,7 @@ offline-order-website/
 - 商品可删除（软删除 active=0，不再显示在销售列表）
 - 商品卡片分为上下两行：上层左上角显示 56px 商品缩略图，右侧显示名称和价格；下层数量步进器横向占满整行
 - 商品网格按卡片实际最小宽度自适应列数：桌面端最小约 176px，移动端最小约 160px，容器不足时自动降为单列
+- 活动编辑页支持拖拽调整商品展示顺序，顺序保存到 `sort_order`
 
 ### 订单录入
 - 进入活动后可见商品卡片，点击 +/− 调整加购数量，或直接点击数量数字手动输入
@@ -91,6 +92,11 @@ offline-order-website/
 - 取消的订单不计入销售统计，但保留审计记录
 - 订单记录包含商品名称和价格快照、满赠名称与数量快照（历史准确性）
 - 统计报表支持日期筛选、商品销量/退货明细、满赠发放统计和 CSV 导出；CSV 金额按主单位保留两位小数，货币单位写在金额列标题中
+- 订单详情支持打印小票，并提供适配热敏打印机宽度的打印样式
+
+### 审计日志
+- 关键登录、账号、活动、商品、满赠、成员、图片和订单操作写入 `audit_logs`
+- 系统管理员和管理员可在审计日志页面查看操作者、活动、动作、时间和载荷
 
 ### 国际化 (i18n)
 - 支持简体中文 (zh-CN)、繁体中文 (zh-TW)、粤语（香港，zh-HK）、英语 (en)、日语 (ja)
@@ -189,6 +195,8 @@ npm run icons:generate
 | POST | `/api/events/:id/products` | 添加商品 |
 | PATCH | `/api/products/:id` | 编辑商品 |
 | DELETE | `/api/products/:id` | 删除商品 |
+| PATCH | `/api/events/:id/products` | 批量保存商品排序 |
+| POST/PATCH | `/api/events/:id/products/reorder` | 批量保存商品排序（兼容路由） |
 | POST | `/api/events/:id/gifts` | 添加满赠规则 |
 | PATCH | `/api/gifts/:id` | 编辑满赠规则 |
 | DELETE | `/api/gifts/:id` | 删除满赠规则（软删除） |
@@ -201,6 +209,7 @@ npm run icons:generate
 | GET | `/api/orders/:id` | 订单详情（商品与满赠快照） |
 | POST | `/api/events/:id/orders` | 提交订单 |
 | POST | `/api/orders/:id/cancel` | 取消订单 |
+| GET | `/api/audit-logs` | 审计日志（系统管理员/管理员） |
 | GET | `/media/:key` | 获取 R2 图片 |
 
 ## 业务约定

@@ -74,4 +74,4 @@ Every deploy must bump the PWA cache version **in all three places together**, o
 - `public/app.js` — `navigator.serviceWorker.register('/sw.js?v=N')`
 - `public/sw.js` — `CACHE = 'field-orders-shell-vN'` and the matching `?v=N` entries in `SHELL`
 
-Then `npm run check && npx wrangler deploy`. Redeploy is data-safe (D1/R2 persist). The current application version is `0.3.0` and the current PWA cache version is `v34`; both are tracked in `DEVELOPMENT.md`.
+Then `npm run check && npx wrangler deploy`. Redeploy is data-safe (D1/R2 persist). The current application version is `0.4.0` and the current PWA cache version is `v35`; both are tracked in `DEVELOPMENT.md`.
