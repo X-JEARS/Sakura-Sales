@@ -24,7 +24,7 @@ offline-order-website/
 ├── public/                 # 静态资源（由 Workers Assets 托管）
 │   ├── index.html          # 入口 HTML
 │   ├── app.js              # 前端 SPA（界面与业务逻辑）
-│   ├── app-runtime.js      # 路由与 Demo 环境判断辅助
+│   ├── app-runtime.js      # 路由、状态与表单校验辅助
 │   ├── styles.css          # 全部样式（含暗色主题）
 │   ├── sw.js               # Service Worker
 │   └── manifest.webmanifest
@@ -33,7 +33,7 @@ offline-order-website/
 ├── scripts/
 │   ├── dev-server.mjs      # 支持 SPA fallback 的本地预览服务器
 │   └── hash-password.mjs   # PBKDF2 密码哈希工具
-├── test/                   # Node.js 运行时与路由测试
+├── test/                   # Node.js 前端运行时与 Worker API 测试
 ├── wrangler.toml           # Cloudflare 配置（绑定 D1/R2/KV/Assets）
 ├── package.json
 └── README.md
@@ -163,6 +163,7 @@ npx wrangler d1 execute field-market-orders --remote --command \
 
 ```bash
 npm run check        # 语法检查
+npm test             # 前端运行时与 Worker API 测试
 npx wrangler deploy  # 部署 Worker + 静态资源
 ```
 

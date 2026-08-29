@@ -11,7 +11,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ```bash
 npm run dev              # local SPA preview at http://127.0.0.1:8765 (uses demo data admin/admin; orders saved to localStorage)
 npm run check            # syntax check: node --check worker.js && node --check public/app.js  (run before every deploy)
-npm test                 # focused runtime and routing tests
+npm test                 # focused frontend runtime, routing, and Worker API tests
 npm run icons:generate   # regenerate public/antd-icons.js from antd-mobile-icons (run only when icon set changes)
 
 npx wrangler deploy                                          # deploy Worker + assets to Cloudflare
@@ -27,7 +27,7 @@ There is no linter or bundler. `npm test` runs the focused Node test suite, whil
 `boot()` calls `/api/bootstrap`; localhost/127.0.0.1 falls back to `seedDemo()` (in-memory demo data + `localStorage` persistence), while other hosts show the login screen. Demo writes and image Data URL fallback are guarded by `canUseDemoFallback()`; production request failures preserve state and show an error. The same function often has a `baseX` + reassigned `actions`/`submitForm` pattern where a later block monkey-patches the earlier one (e.g. account editing was layered on top of the original); edit the final assigned function, not just `baseActions`.
 
 ### Rendering model (app.js)
-Single IIFE holding a `state` object. `render()` rewrites `#app.innerHTML` from `state` and `bindEvents()` re-attaches all handlers — there is no virtual DOM or diffing. `syncCheckout()` is the one partial-update path (patches only the checkout bar during stepper input); if you touch cart logic, keep it in sync with `checkoutBarHTML()`. `public/app-runtime.js` owns pure route mapping helpers; `app.js` uses History API `pushState`/`popstate` for event, edit, reports, orders, accounts, audit, and settings routes.
+Single IIFE holding a `state` object. `render()` rewrites `#app.innerHTML` from `state` and `bindEvents()` re-attaches all handlers — there is no virtual DOM or diffing. `syncCheckout()` is the one partial-update path (patches only the checkout bar during stepper input); if you touch cart logic, keep it in sync with `checkoutBarHTML()`. `public/app-runtime.js` owns pure route, event-state, and password-confirmation helpers; `app.js` uses History API `pushState`/`popstate` for event, edit, reports, orders, accounts, audit, and settings routes.
 
 ### Worker (worker.js)
 One `fetch` handler, no router library. Request flow: `/media/*` → R2 passthrough (cached immutable); non-`/api/*` → `env.ASSETS` with SPA fallback to `/index.html`; `/api/*` → strip prefix, then a dense `if (path === ... && method === ...) return ...` chain using regex matches for parameterized routes. All `/api/*` routes (except `/auth/login`) require `sessionUser()`. Keep this single-file, inline style — it is intentional.
@@ -75,4 +75,4 @@ Every deploy must bump the PWA cache version **in all three places together**, o
 - `public/app.js` — `navigator.serviceWorker.register('/sw.js?v=N')`
 - `public/sw.js` — `CACHE = 'field-orders-shell-vN'` and matching `?v=N` entries in `SHELL`, including `app-runtime.js`
 
-Then `npm run check && npx wrangler deploy`. Redeploy is data-safe (D1/R2 persist). The current application version is `0.4.0` and the current PWA cache version is `v38`; both are tracked in `DEVELOPMENT.md`.
+Then `npm run check && npm test && npx wrangler deploy`. Redeploy is data-safe (D1/R2 persist). The current application version is `0.4.0` and the current PWA cache version is `v38`; both are tracked in `DEVELOPMENT.md`.

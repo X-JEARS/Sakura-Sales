@@ -134,7 +134,7 @@
 | 前端无路由管理 | 已使用 History API 同步活动、编辑、报表、订单、账号、审计和设置页面 | 已完成（v0.4.0） |
 | CSS 单文件未模块化 | 所有样式在 styles.css，随功能增长维护成本上升 | 功能稳定后可拆分 |
 | `currency_scale` 尚未贯通前端 | schema 支持自定义最小单位，但前端金额换算仍固定按 100；JPY 等零位小数货币暂不适用 | 中 |
-| 自动化测试覆盖不足 | 已增加路由与 Demo 隔离测试；业务渲染和 Worker API 仍缺少集成测试 | 中 |
+| 自动化测试覆盖不足 | 已覆盖路由、Demo 隔离、确认密码和非销售中活动拒绝下单；业务渲染及其余 Worker API 仍缺少集成测试 | 中 |
 
 ---
 
@@ -156,6 +156,6 @@
 - 当前应用缓存版本：`v38`
 - antd 图标资源生成：`npm run icons:generate`
 - 首次安装依赖或升级图标库后先运行：`npm install`
-- 部署命令：`npm run check && npx wrangler deploy`
+- 部署命令：`npm run check && npm test && npx wrangler deploy`
 - 数据库迁移：`npx wrangler d1 execute field-market-orders --remote --file=schema.sql`
 - 密码哈希：`node scripts/hash-password.mjs '<password>'`
