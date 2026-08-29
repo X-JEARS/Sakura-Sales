@@ -78,6 +78,14 @@ html,body{touch-action:pan-x pan-y}
 .event-card-footer{flex-direction:column;align-items:stretch;gap:10px}
 .event-card-footer small{display:block;width:100%;white-space:normal;overflow-wrap:anywhere}
 .event-card-actions{width:100%;justify-content:flex-end;flex-wrap:wrap}
+.event-card-actions .btn-primary{order:0;flex:0 0 auto}
+.event-delete-edit{margin-left:8px}
+.reports-page-head{align-items:center}
+.reports-heading{display:flex;align-items:baseline;gap:12px;min-width:0}
+.reports-heading h2{margin:0;white-space:nowrap}
+.reports-heading p{margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.reports-head-actions{display:flex;align-items:center;justify-content:flex-end;gap:8px;flex:0 0 auto;white-space:nowrap}
+@media(max-width:640px){.reports-page-head{display:flex;align-items:flex-start}.reports-heading{display:block;min-width:0}.reports-heading p{margin-top:5px}.reports-head-actions{margin-top:0;flex-wrap:wrap;justify-content:flex-end}}
 
 /* One consistent, rounded line-icon treatment across navigation and actions. */
 .icon{width:1.1em;height:1.1em;display:inline-block;flex:0 0 auto;vertical-align:-.18em;stroke:currentColor}
@@ -88,3 +96,4 @@ html,body{touch-action:pan-x pan-y}
 .icon-action{display:inline-flex;align-items:center;justify-content:center}
 .icon-action .icon{width:17px;height:17px;margin:0}
 .status-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:currentColor;margin-right:5px;vertical-align:1px}
+.filter-bar{display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:18px}.filter-bar label{display:grid;gap:6px;color:var(--muted);font-size:12px;font-weight:700}.filter-bar input{border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:7px;padding:9px 10px}

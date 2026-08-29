@@ -56,7 +56,7 @@ offline-order-website/
 - 可设置可访问该活动的操作员账号，并在活动编辑页修改成员权限
 - 活动卡片不展示商品或订单统计数据
 - 销售数据入口仅对系统管理员和活动管理员可见，使用报表图标按钮
-- 活动卡片中的活动地址单独占行，操作按钮保持在卡片右下方，适配窄屏管理员界面
+- 活动卡片不展示地址文本；数据、编辑、复制链接按钮位于“进入”活动按钮左侧
 
 ### 商品管理
 - 每个活动下可创建多个商品
@@ -90,6 +90,7 @@ offline-order-website/
 - 订单可取消（软删除，状态变为 cancelled）
 - 取消的订单不计入销售统计，但保留审计记录
 - 订单记录包含商品名称和价格快照、满赠名称与数量快照（历史准确性）
+- 统计报表支持日期筛选、商品销量/退货明细、满赠发放统计和 CSV 导出；CSV 金额按主单位保留两位小数，货币单位写在金额列标题中
 
 ### 国际化 (i18n)
 - 支持简体中文 (zh-CN)、繁体中文 (zh-TW)、粤语（香港，zh-HK）、英语 (en)、日语 (ja)
@@ -184,6 +185,7 @@ npm run icons:generate
 | PATCH | `/api/users/:id` | 编辑用户资料、角色、状态或密码（管理员） |
 | POST | `/api/events` | 创建活动（管理员） |
 | PATCH | `/api/events/:id` | 编辑活动（活动管理员+） |
+| DELETE | `/api/events/:id` | 删除活动及其关联数据（系统管理员/管理员） |
 | POST | `/api/events/:id/products` | 添加商品 |
 | PATCH | `/api/products/:id` | 编辑商品 |
 | DELETE | `/api/products/:id` | 删除商品 |
@@ -196,6 +198,7 @@ npm run icons:generate
 | DELETE | `/api/events/:id/members/:userId` | 移除成员 |
 | POST | `/api/events/:id/images` | 上传图片至 R2 |
 | GET | `/api/events/:id/orders` | 活动订单列表 |
+| GET | `/api/orders/:id` | 订单详情（商品与满赠快照） |
 | POST | `/api/events/:id/orders` | 提交订单 |
 | POST | `/api/orders/:id/cancel` | 取消订单 |
 | GET | `/media/:key` | 获取 R2 图片 |

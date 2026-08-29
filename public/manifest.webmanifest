@@ -8,7 +8,7 @@
   "description": "场贩活动订单录入与销售统计 PWA",
   "icons": [
     {
-      "src": "/sakura.png?v=27",
+      "src": "/sakura.png?v=34",
       "sizes": "256x256",
       "type": "image/png",
       "purpose": "any maskable"
