@@ -29,8 +29,8 @@
 
 - [x] 创建活动（弹窗表单：名称、价格单位、状态、开售/停售时间）
 - [x] 编辑活动（独立编辑页面：基础信息 + 商品列表 + 可访问人员）
-- [x] 活动列表卡片（状态指示器位于名称下方）
-- [x] 销售数据按钮（仅系统管理员和活动管理员可见）
+- [x] 活动列表卡片（状态指示器与活动名称同排，位于卡片右上角）
+- [x] 销售数据入口（仅系统管理员和活动管理员可见，使用报表图标）
 - [x] 活动直接访问链接（`/events/{slug}`）
 
 ### 商品管理
@@ -179,7 +179,7 @@
 ## 部署备忘
 
 - 每次部署前同步递增三个文件中的缓存版本号：`index.html`（`app.js?v=N`）、`app.js`（`sw.js?v=N`）、`sw.js`（`CACHE` 常量）
-- 当前应用缓存版本：`v12`
+- 当前应用缓存版本：`v17`
 - 部署命令：`npm run check && npx wrangler deploy`
 - 数据库迁移：`npx wrangler d1 execute field-market-orders --remote --file=schema.sql`
 - 密码哈希：`node scripts/hash-password.mjs '<password>'`
