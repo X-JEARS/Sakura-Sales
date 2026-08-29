@@ -4,7 +4,7 @@
   "start_url": "/",
   "display": "standalone",
   "background_color": "#f5f7fb",
-  "theme_color": "#2556d8",
+  "theme_color": "#f5f7fb",
   "description": "场贩活动订单录入与销售统计 PWA",
   "icons": []
 }
