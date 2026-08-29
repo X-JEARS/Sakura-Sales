@@ -71,6 +71,7 @@ offline-order-website/
 - 移动端展开侧栏时显示遮罩，点击侧栏外区域即可收起，避免误触页面内容
 - 商品列表滚动到底部时，最后一张商品卡片与结算栏之间保留间距
 - 点击"确认下单"后二次确认，提交后订单立即计入统计
+- 活动下单界面右上角可进入当前活动的订单记录
 - 无退货时仅显示总额；有退货时在总额左侧显示销售金额和退货金额分项
 
 ### 满赠规则
@@ -94,6 +95,11 @@ offline-order-website/
 ### 主题
 - 浅色 / 深色 / 跟随系统
 - 默认浅色，可在个人设置中切换
+
+### 账号管理
+- 用户可在个人设置中修改用户名、显示名称和密码
+- 系统管理员可在账号管理中编辑用户资料、角色及启用状态
+- 修改密码时留空表示保留当前密码；用户不能禁用自己的账号或降级自己的权限
 
 ## 本地预览
 
@@ -157,9 +163,11 @@ npx wrangler deploy  # 部署 Worker + 静态资源
 | POST | `/api/auth/login` | 登录 |
 | POST | `/api/auth/logout` | 退出 |
 | PATCH | `/api/auth/preferences` | 更新语言/主题 |
+| PATCH | `/api/auth/account` | 修改当前用户的用户名、显示名称或密码 |
 | GET | `/api/bootstrap` | 初始化数据（用户、活动、商品、订单等） |
 | GET | `/api/users` | 用户列表（管理员） |
 | POST | `/api/users` | 创建用户（管理员） |
+| PATCH | `/api/users/:id` | 编辑用户资料、角色、状态或密码（管理员） |
 | POST | `/api/events` | 创建活动（管理员） |
 | PATCH | `/api/events/:id` | 编辑活动（活动管理员+） |
 | POST | `/api/events/:id/products` | 添加商品 |

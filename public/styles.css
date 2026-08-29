@@ -44,4 +44,7 @@ html,body{touch-action:pan-x pan-y}
 .event-card-actions .btn{white-space:nowrap;flex:0 0 auto}
 .event-card-actions .icon-action{width:40px;padding-left:8px;padding-right:8px;font-size:18px;line-height:1}
 .event-card-manage-actions{margin-top:16px}
+.event-page-head .btn{margin-top:0}
+@media(max-width:640px){.event-page-head{display:flex;align-items:flex-start}.event-page-head>div{min-width:0}.event-page-head .btn{margin-top:0;flex:0 0 auto}}
 @media(max-width:640px){.event-card-head{align-items:flex-start}.event-card-head h3{white-space:normal}}
+.setting-row{gap:20px}.setting-row input{width:min(280px,52%);border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:7px;padding:10px 11px;outline:none}.setting-row input:focus{border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-soft)}
