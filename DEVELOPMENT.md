@@ -186,7 +186,7 @@
 ## 部署备忘
 
 - 每次部署前同步递增三个文件中的缓存版本号：`index.html`（`app.js?v=N`）、`app.js`（`sw.js?v=N`）、`sw.js`（`CACHE` 常量）
-- 当前应用缓存版本：`v25`
+- 当前应用缓存版本：`v26`
 - antd 图标资源生成：`npm run icons:generate`
 - 首次安装依赖或升级图标库后先运行：`npm install`
 - 部署命令：`npm run check && npx wrangler deploy`
