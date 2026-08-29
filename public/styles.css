@@ -17,7 +17,7 @@
 /* Keep the main chrome visible while page content scrolls. */
 .workspace{display:flex;flex-direction:column;min-height:100vh}
 .topbar{position:sticky;top:0;z-index:12}
-.content{flex:1}
+.content{flex:1;width:100%;min-width:0}
 
 /* Leave breathing room between the final product row and the checkout bar. */
 .event-order{padding-bottom:24px}
