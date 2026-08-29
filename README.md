@@ -15,6 +15,8 @@
 | 缓存 | Cloudflare KV | 预留（会话/配置缓存） |
 | PWA | Service Worker + Manifest | 可安装到主屏幕，离线缓存应用外壳 |
 
+图标资源使用 `antd-mobile-icons`。项目不在浏览器加载 React，而是在构建时提取所需的官方 SVG 轮廓到 `public/antd-icons.js`。
+
 ## 项目结构
 
 ```
@@ -159,6 +161,13 @@ npx wrangler deploy  # 部署 Worker + 静态资源
 - `public/sw.js` — `CACHE` 常量
 
 图标使用 `antd-mobile-icons` 的官方轮廓资源，构建时由 `scripts/extract-antd-icons.mjs` 提取到 `public/antd-icons.js`，无需在浏览器运行 React。
+
+首次安装依赖或升级图标库后执行：
+
+```bash
+npm install
+npm run icons:generate
+```
 
 ## API 路由
 

@@ -186,6 +186,7 @@
 - 每次部署前同步递增三个文件中的缓存版本号：`index.html`（`app.js?v=N`）、`app.js`（`sw.js?v=N`）、`sw.js`（`CACHE` 常量）
 - 当前应用缓存版本：`v24`
 - antd 图标资源生成：`npm run icons:generate`
+- 首次安装依赖或升级图标库后先运行：`npm install`
 - 部署命令：`npm run check && npx wrangler deploy`
 - 数据库迁移：`npx wrangler d1 execute field-market-orders --remote --file=schema.sql`
 - 密码哈希：`node scripts/hash-password.mjs '<password>'`
