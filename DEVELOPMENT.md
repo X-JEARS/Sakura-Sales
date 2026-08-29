@@ -68,6 +68,9 @@
 
 - [x] 侧栏导航（活动列表 / 订单 / 活动管理 / 账号管理 / 个人设置）
 - [x] 移动端侧栏抽屉（☰ 按钮展开，✕ 按钮关闭）
+- [x] 移动端侧栏遮罩（点击侧栏外区域收起，并阻止背景页面交互）
+- [x] 顶栏滚动时固定在页面顶部
+- [x] 商品列表与底部结算栏之间保留滚动间距
 - [x] Toast 提示
 - [x] 模态弹窗（创建活动 / 创建商品 / 创建用户 / 添加成员 / 下单确认）
 - [x] 账号管理与活动管理分离为独立页面
@@ -175,7 +178,7 @@
 ## 部署备忘
 
 - 每次部署前同步递增三个文件中的缓存版本号：`index.html`（`app.js?v=N`）、`app.js`（`sw.js?v=N`）、`sw.js`（`CACHE` 常量）
-- 当前应用缓存版本：`v11`
+- 当前应用缓存版本：`v12`
 - 部署命令：`npm run check && npx wrangler deploy`
 - 数据库迁移：`npx wrangler d1 execute field-market-orders --remote --file=schema.sql`
 - 密码哈希：`node scripts/hash-password.mjs '<password>'`

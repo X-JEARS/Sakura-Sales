@@ -13,3 +13,22 @@
 .stepper{min-width:0}
 .stepper button{flex:0 0 35px}
 @media(max-width:640px){.product-grid{--product-card-min:210px;grid-template-columns:repeat(auto-fill,minmax(min(100%,var(--product-card-min)),1fr));gap:10px}}
+
+/* Keep the main chrome visible while page content scrolls. */
+.workspace{display:flex;flex-direction:column;min-height:100vh}
+.topbar{position:sticky;top:0;z-index:12}
+.content{flex:1}
+
+/* Leave breathing room between the final product row and the checkout bar. */
+.event-order{padding-bottom:24px}
+
+/* The backdrop is only interactive when the mobile sidebar is open. */
+.sidebar-backdrop{display:none}
+@media(max-width:640px){
+  .sidebar-backdrop{display:block;position:fixed;inset:0;background:rgba(10,18,34,.48);opacity:0;pointer-events:none;transition:opacity .18s ease;z-index:14}
+  .sidebar-backdrop.open{opacity:1;pointer-events:auto}
+  body.sidebar-open{overflow:hidden}
+}
+
+/* Keep mobile scrolling available while disabling browser zoom gestures. */
+html,body{touch-action:pan-x pan-y}
