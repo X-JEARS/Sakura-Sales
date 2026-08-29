@@ -90,7 +90,7 @@ offline-order-website/
 - 订单记录包含商品名称和价格快照、满赠名称与数量快照（历史准确性）
 
 ### 国际化 (i18n)
-- 支持简体中文 (zh-CN)、繁体中文 (zh-TW)、英语 (en)、日语 (ja)
+- 支持简体中文 (zh-CN)、繁体中文 (zh-TW)、粤语（香港，zh-HK）、英语 (en)、日语 (ja)
 - 默认跟随浏览器系统语言
 - 用户可在设置中手动覆盖
 
@@ -157,6 +157,8 @@ npx wrangler deploy  # 部署 Worker + 静态资源
 - `public/index.html` — `app.js?v=N`
 - `public/app.js` — `navigator.serviceWorker.register('/sw.js?v=N')`
 - `public/sw.js` — `CACHE` 常量
+
+图标使用 `antd-mobile-icons` 的官方轮廓资源，构建时由 `scripts/extract-antd-icons.mjs` 提取到 `public/antd-icons.js`，无需在浏览器运行 React。
 
 ## API 路由
 

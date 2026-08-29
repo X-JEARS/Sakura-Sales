@@ -5,6 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "python3 -m http.server 8765 -d public",
-    "check": "node --check worker.js && node --check public/app.js"
+    "check": "node --check worker.js && node --check public/app.js",
+    "icons:generate": "node scripts/extract-antd-icons.mjs"
+  },
+  "dependencies": {
+    "antd-mobile-icons": "^0.3.0"
   }
 }
