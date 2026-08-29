@@ -8,7 +8,7 @@
 
 - 对照 `public/app.js`、`worker.js`、`schema.sql` 检查 v0.2.0 功能，满赠管理、图片上传/删除、用户管理、多货币和订单满赠快照均已在文档中标记完成。
 - 对照当前代码检查待完善项，审计日志、商品排序和订单打印已在 v0.4.0 完整实现；活动克隆仍待开发。
-- 当前应用版本为 `0.4.0`，PWA 缓存版本为 `v35`。
+- 当前应用版本为 `0.4.0`，PWA 缓存版本为 `v36`。
 
 ---
 
@@ -125,11 +125,13 @@
 | 项目 | 说明 | 建议优先级 |
 |------|------|-----------|
 | `newEvent()` / `newProduct()` 仍在使用 `prompt()` | 这两个函数未被调用（已被 `openForm` 替代），但代码仍残留 | 已清理（v0.2.0） |
-| Demo 模式 fallback 逻辑分散 | `submitForm` / `cancelOrder` 中 try-catch 的 catch 分支会写 localStorage demo 数据 | 可保留作为离线开发支持，但应统一封装 |
+| Demo 模式 fallback 逻辑分散 | 已限制为 localhost Demo 模式，并通过统一检查与持久化入口隔离生产请求失败 | 已完成（v0.4.0） |
 | `order_gifts` 表未使用 | schema 已建表但未写入数据 | 已实现（v0.2.0，POST /orders 时由服务端按 gift_rules 重算写入） |
 | `audit_logs` 表未使用 | 已由 v0.4.0 审计日志接口写入并提供管理员查询 | 已完成 |
-| 前端无路由管理 | 使用 state.screen 手动切换，浏览器前进/后退不支持 | 可引入 hashchange 或 history API |
+| 前端无路由管理 | 已使用 History API 同步活动、编辑、报表、订单、账号、审计和设置页面 | 已完成（v0.4.0） |
 | CSS 单文件未模块化 | 所有样式在 styles.css，随功能增长维护成本上升 | 功能稳定后可拆分 |
+| `currency_scale` 尚未贯通前端 | schema 支持自定义最小单位，但前端金额换算仍固定按 100；JPY 等零位小数货币暂不适用 | 中 |
+| 自动化测试覆盖不足 | 已增加路由与 Demo 隔离测试；业务渲染和 Worker API 仍缺少集成测试 | 中 |
 
 ---
 
@@ -141,14 +143,14 @@
 | v0.2.0 | 满赠规则管理、商品图片上传、商品删除、订单满赠持久化、多货币单位 |
 | v0.3.0 | 活动删除、销售统计增强、订单详情 |
 | v0.4.0 | 审计日志、商品排序、订单打印（当前版本） |
-| v1.0.0 | 路由管理重构、CSS 模块化、完整测试覆盖 |
+| v1.0.0 | `currency_scale` 贯通、CSS 模块化、完整测试覆盖 |
 
 ---
 
 ## 部署备忘
 
-- 每次部署前同步递增三个文件中的缓存版本号：`index.html`（`app.js?v=N`）、`app.js`（`sw.js?v=N`）、`sw.js`（`CACHE` 常量）
-- 当前应用缓存版本：`v35`
+- 每次部署前同步递增缓存版本号：`index.html`（静态资源 `?v=N`）、`app.js`（`sw.js?v=N`）、`sw.js`（`CACHE` 常量及 `SHELL` 资源）
+- 当前应用缓存版本：`v36`
 - antd 图标资源生成：`npm run icons:generate`
 - 首次安装依赖或升级图标库后先运行：`npm install`
 - 部署命令：`npm run check && npx wrangler deploy`

@@ -9,8 +9,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Commands
 
 ```bash
-npm run dev              # local static preview at http://127.0.0.1:8765 (uses demo data admin/admin; orders saved to localStorage)
+npm run dev              # local SPA preview at http://127.0.0.1:8765 (uses demo data admin/admin; orders saved to localStorage)
 npm run check            # syntax check: node --check worker.js && node --check public/app.js  (run before every deploy)
+npm test                 # focused runtime and routing tests
 npm run icons:generate   # regenerate public/antd-icons.js from antd-mobile-icons (run only when icon set changes)
 
 npx wrangler deploy                                          # deploy Worker + assets to Cloudflare
@@ -18,15 +19,15 @@ npx wrangler d1 execute field-market-orders --remote --file=schema.sql   # apply
 node scripts/hash-password.mjs '<password>'                  # PBKDF2 hash for seeding a user
 ```
 
-There is no test suite, linter, or build step beyond `node --check`. The "build" is just syncing the PWA cache version (below).
+There is no linter or bundler. `npm test` runs the focused Node test suite, while `npm run check` performs syntax checks. The "build" is just syncing the PWA cache version (below).
 
 ## Architecture
 
 ### Two runtime modes (app.js)
-`boot()` calls `/api/bootstrap`; on failure it branches by hostname: localhost/127.0.0.1 falls back to `seedDemo()` (in-memory demo data + `localStorage` persistence), any other host sets `state.user = null` (login screen). Every API call in `submitForm`/`cancelOrder`/etc. is wrapped in try/catch whose catch writes demo data to `localStorage`. **Do not strip these catch branches** — they are the offline/demo development path, not dead code. The same function often has a `baseX` + reassigned `actions`/`submitForm` pattern where a later block monkey-patches the earlier one (e.g. account editing was layered on top of the original); edit the final assigned function, not just `baseActions`.
+`boot()` calls `/api/bootstrap`; localhost/127.0.0.1 falls back to `seedDemo()` (in-memory demo data + `localStorage` persistence), while other hosts show the login screen. Demo writes and image Data URL fallback are guarded by `canUseDemoFallback()`; production request failures preserve state and show an error. The same function often has a `baseX` + reassigned `actions`/`submitForm` pattern where a later block monkey-patches the earlier one (e.g. account editing was layered on top of the original); edit the final assigned function, not just `baseActions`.
 
 ### Rendering model (app.js)
-Single IIFE holding a `state` object. `render()` rewrites `#app.innerHTML` from `state` and `bindEvents()` re-attaches all handlers — there is no virtual DOM or diffing. `syncCheckout()` is the one partial-update path (patches only the checkout bar during stepper input); if you touch cart logic, keep it in sync with `checkoutBarHTML()`. Routing is manual `state.screen` switching; only `/events/{slug}` is read from `location.pathname` in `checkRoute()` at boot. Browser back/forward is unsupported (known tech debt).
+Single IIFE holding a `state` object. `render()` rewrites `#app.innerHTML` from `state` and `bindEvents()` re-attaches all handlers — there is no virtual DOM or diffing. `syncCheckout()` is the one partial-update path (patches only the checkout bar during stepper input); if you touch cart logic, keep it in sync with `checkoutBarHTML()`. `public/app-runtime.js` owns pure route mapping helpers; `app.js` uses History API `pushState`/`popstate` for event, edit, reports, orders, accounts, audit, and settings routes.
 
 ### Worker (worker.js)
 One `fetch` handler, no router library. Request flow: `/media/*` → R2 passthrough (cached immutable); non-`/api/*` → `env.ASSETS` with SPA fallback to `/index.html`; `/api/*` → strip prefix, then a dense `if (path === ... && method === ...) return ...` chain using regex matches for parameterized routes. All `/api/*` routes (except `/auth/login`) require `sessionUser()`. Keep this single-file, inline style — it is intentional.
@@ -70,8 +71,8 @@ Five locales (zh-CN/zh-TW/zh-HK/en/ja) in two objects: `T` (core) and `EXTRA` (m
 
 Every deploy must bump the PWA cache version **in all three places together**, or a stale service-worker shell lingers for users:
 
-- `public/index.html` — `?v=N` on `styles.css`, `antd-icons.js`, `app.js`
+- `public/index.html` — `?v=N` on `styles.css`, `antd-icons.js`, `app-runtime.js`, `app.js`
 - `public/app.js` — `navigator.serviceWorker.register('/sw.js?v=N')`
-- `public/sw.js` — `CACHE = 'field-orders-shell-vN'` and the matching `?v=N` entries in `SHELL`
+- `public/sw.js` — `CACHE = 'field-orders-shell-vN'` and matching `?v=N` entries in `SHELL`, including `app-runtime.js`
 
-Then `npm run check && npx wrangler deploy`. Redeploy is data-safe (D1/R2 persist). The current application version is `0.4.0` and the current PWA cache version is `v35`; both are tracked in `DEVELOPMENT.md`.
+Then `npm run check && npx wrangler deploy`. Redeploy is data-safe (D1/R2 persist). The current application version is `0.4.0` and the current PWA cache version is `v36`; both are tracked in `DEVELOPMENT.md`.

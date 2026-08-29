@@ -23,14 +23,17 @@
 offline-order-website/
 ├── public/                 # 静态资源（由 Workers Assets 托管）
 │   ├── index.html          # 入口 HTML
-│   ├── app.js              # 前端 SPA（全部逻辑）
+│   ├── app.js              # 前端 SPA（界面与业务逻辑）
+│   ├── app-runtime.js      # 路由与 Demo 环境判断辅助
 │   ├── styles.css          # 全部样式（含暗色主题）
 │   ├── sw.js               # Service Worker
 │   └── manifest.webmanifest
 ├── worker.js               # Cloudflare Worker API
 ├── schema.sql              # D1 数据库建表语句
 ├── scripts/
+│   ├── dev-server.mjs      # 支持 SPA fallback 的本地预览服务器
 │   └── hash-password.mjs   # PBKDF2 密码哈希工具
+├── test/                   # Node.js 运行时与路由测试
 ├── wrangler.toml           # Cloudflare 配置（绑定 D1/R2/KV/Assets）
 ├── package.json
 └── README.md
@@ -52,7 +55,7 @@ offline-order-website/
 ### 贩售活动管理
 - 每个活动包含名称、价格单位、开售/停售时间、销售状态（草稿/销售中/待开始/已结束）
 - 价格单位支持 `CNY`、`HKD`、`JPY`、`USD`，下拉选项会随界面语言显示本地化名称
-- 活动生成唯一 slug，通过 `/events/{slug}` 可直接访问
+- 活动生成唯一 slug，通过 `/events/{slug}` 可直接访问；编辑、报表和订单页也支持深链接刷新
 - 可设置可访问该活动的操作员账号，并在活动编辑页修改成员权限
 - 活动卡片不展示商品或订单统计数据
 - 销售数据入口仅对系统管理员和活动管理员可见，使用报表图标按钮
@@ -119,7 +122,7 @@ offline-order-website/
 npm run dev
 ```
 
-打开 <http://127.0.0.1:8765>。本地静态预览会自动使用演示数据（`admin / admin`），订单保存到浏览器 `localStorage`。
+打开 <http://127.0.0.1:8765>。本地 SPA 预览会自动使用演示数据（`admin / admin`），订单保存到浏览器 `localStorage`；活动深链接刷新也可直接访问。
 
 ## Cloudflare 部署
 

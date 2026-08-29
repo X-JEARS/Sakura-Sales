@@ -4,8 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "python3 -m http.server 8765 -d public",
+    "dev": "node scripts/dev-server.mjs",
     "check": "node --check worker.js && node --check public/app.js",
+    "test": "node --test test/*.test.mjs",
     "icons:generate": "node scripts/extract-antd-icons.mjs"
   },
   "dependencies": {
