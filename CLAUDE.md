@@ -42,11 +42,20 @@ All amounts are **integer minor units** (`price_minor`, `*_amount_minor`, `thres
 ### Gift computation (duplicated, server-authoritative)
 `computeGifts(net, rules)` in worker.js and `calcCart()` in app.js implement the same rule: filter rules with `threshold_minor <= max(0, net)`; `cumulative` mode → `qty = floor(net / threshold)`; `highest` mode → `qty = 1` only for the single highest matched threshold. **The server recomputes from `gift_rules` on order submit and writes name/quantity snapshots to `order_gifts`** — the client calculation is display-only. If you change the rule, update both.
 
-### Soft deletes everywhere
-Products (`active=0`), gift rules (`active=0`), and orders (`status='cancelled'`) are never hard-deleted. Cancelled orders are excluded from sales statistics but kept for audit. Bootstrap queries filter `active=1`.
-
 ### Orders & idempotency
 `POST /events/:id/orders` requires `client_request_id` (UNIQUE); a duplicate returns the existing order instead of creating one. Order is rejected unless `event.manual_status === 'open'`. Server re-reads active products to compute line amounts (client-sent prices are not trusted) and batches the order + items + gifts in one `env.DB.batch()`.
+
+### Reporting & order details
+The reports screen filters confirmed orders by date, shows net sales, sales, returns, product quantities, return quantities, and gift totals, and exports item-level CSV. CSV amount values are converted from minor units to major units with two decimal places; the currency unit belongs in the amount column header, not in each value. `GET /orders/:id` returns the order together with item and gift snapshots for the order-detail modal.
+
+### Event deletion
+`DELETE /events/:id` is restricted to `super_admin` and `admin` and permanently removes the event plus its orders, order items, gifts, products, event members, and audit logs. This is the intentional exception to the soft-delete rules below; the UI exposes the destructive action only on the event edit screen.
+
+### Soft deletes
+Products (`active=0`) and gift rules (`active=0`) are never hard-deleted. Cancelling an order sets `status='cancelled'`; cancelled orders are excluded from sales statistics but kept for audit. Event deletion is the separate permanent-cleanup operation described above. Bootstrap queries filter products and gift rules with `active=1`.
+
+### Event cards
+Event cards do not display the event URL as text. The `enter` action is on the right, with data/reports, edit, and copy-link actions to its left; destructive event deletion is available from the edit screen only.
 
 ### Images (R2)
 Uploaded via `POST /events/:id/images` (raw body, content-type derived extension, ≤5MB, JPG/PNG/WebP/GIF) to key `events/{eventId}/{uuid}.{ext}`, served from `/media/{key}`. Editing a product's image and `remove-image` both delete the prior R2 object via `r2Key()` (best-effort `.catch(()=>{})`). The `uploadImage` helper falls back to a `FileReader` data URL when the API is unreachable (demo mode).
@@ -65,4 +74,4 @@ Every deploy must bump the PWA cache version **in all three places together**, o
 - `public/app.js` — `navigator.serviceWorker.register('/sw.js?v=N')`
 - `public/sw.js` — `CACHE = 'field-orders-shell-vN'` and the matching `?v=N` entries in `SHELL`
 
-Then `npm run check && npx wrangler deploy`. Redeploy is data-safe (D1/R2 persist). Current version is tracked in `DEVELOPMENT.md`.
+Then `npm run check && npx wrangler deploy`. Redeploy is data-safe (D1/R2 persist). The current application version is `0.3.0` and the current PWA cache version is `v34`; both are tracked in `DEVELOPMENT.md`.
