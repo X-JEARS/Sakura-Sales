@@ -43,7 +43,7 @@ offline-order-website/
 
 | 角色 | 能力 |
 |------|------|
-| 超级管理员 (super_admin) | 全部操作，包括管理其他管理员 |
+| 超级管理员 (super_admin) | 全部操作，包括管理其他管理员；自身角色和启用状态不可修改 |
 | 管理员 (admin) | 创建/编辑活动、管理商品、查看统计、创建操作员账号 |
 | 活动管理员 (event_admin) | 管理所属活动（商品、人员、信息）、查看统计 |
 | 操作员 (operator) | 进入被授权的活动、录入订单、查看订单记录 |
@@ -78,6 +78,7 @@ offline-order-website/
 - 侧栏展开按钮在所有尺寸常驻：桌面/平板从侧边收起或展开，手机从顶部覆盖展开；移动端展开时显示遮罩，点击侧栏外区域即可收起
 - 侧栏高度与浏览器视口保持一致，不随页面可滚动内容拉伸
 - 商品列表滚动到底部时，最后一张商品卡片与结算栏之间保留间距
+- 仅活动状态为“销售中”时允许下单；其他状态下结算按钮禁用，服务端也会拒绝订单创建
 - 点击"确认下单"后二次确认，提交后订单立即计入统计
 - 活动下单界面右上角可进入当前活动的订单记录
 - 无退货时仅显示总额；有退货时在总额左侧显示销售金额和退货金额分项
@@ -114,7 +115,8 @@ offline-order-website/
 ### 账号管理
 - 用户可在个人设置中修改用户名、显示名称和密码
 - 系统管理员可在账号管理中编辑用户资料、角色及启用状态
-- 修改密码时留空表示保留当前密码；用户不能禁用自己的账号或降级自己的权限
+- 修改密码时留空表示保留当前密码；填写新密码时必须再次输入并保持一致
+- 用户不能禁用自己的账号或修改自己的角色；超级管理员的角色和启用状态不可修改
 
 ## 本地预览
 
@@ -167,9 +169,9 @@ npx wrangler deploy  # 部署 Worker + 静态资源
 ### 更新 PWA 缓存
 
 每次部署前需要同步递增三个文件中的版本号：
-- `public/index.html` — `app.js?v=N`
-- `public/app.js` — `navigator.serviceWorker.register('/sw.js?v=N')`
-- `public/sw.js` — `CACHE` 常量
+- `public/index.html` — `styles.css`、`antd-icons.js`、`app-runtime.js`、`app.js` 等静态资源的 `?v=N`
+- `public/app.js` — `navigator.serviceWorker.register('/sw.js?v=N')` 及脚本内带版本的静态资源 URL
+- `public/sw.js` — `CACHE` 常量及 `SHELL` 中对应资源的 `?v=N`
 
 图标使用 `antd-mobile-icons` 的官方轮廓资源，构建时由 `scripts/extract-antd-icons.mjs` 提取到 `public/antd-icons.js`，无需在浏览器运行 React。
 

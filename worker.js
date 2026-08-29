@@ -86,7 +86,11 @@ export default { async fetch(request, env) {
       if(!['super_admin','admin'].includes(user.role))return json({error:'Forbidden'},403);
       const target=await env.DB.prepare('SELECT * FROM users WHERE id=?').bind(userEdit[1]).first(); if(!target)return json({error:'Not found'},404);
       if(target.role==='super_admin'&&user.role!=='super_admin')return json({error:'Forbidden'},403);
-      const body=await readJson(request); const sets=[]; const vals=[];
+      const body=await readJson(request);
+      // A super administrator is immutable with respect to privilege and account state.
+      // Keep this invariant even when the request is made by another super administrator.
+      if(target.role==='super_admin'&&(body.role!==undefined||body.status!==undefined))return json({error:'Super admin role and status cannot be changed'},403);
+      const sets=[]; const vals=[];
       if(body.username!==undefined){const value=String(body.username||'').trim();if(!value)return json({error:'Username is required'},400);sets.push('username=?');vals.push(value);}
       if(body.display_name!==undefined){const value=String(body.display_name||'').trim();if(!value)return json({error:'Display name is required'},400);sets.push('display_name=?');vals.push(value);}
       if(body.role!==undefined){const role=['admin','event_admin','operator'].includes(body.role)?body.role:null;if(!role)return json({error:'Invalid role'},400);if(role==='admin'&&user.role!=='super_admin')return json({error:'Only super admin can assign admins'},403);if(target.id===user.id&&role!==user.role)return json({error:'You cannot change your own role'},400);sets.push('role=?');vals.push(role);}

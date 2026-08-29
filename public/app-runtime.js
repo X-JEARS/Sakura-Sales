@@ -17,6 +17,14 @@
     return LOCAL_DEMO_HOSTS.has(String(hostname || '').toLowerCase());
   }
 
+  function isEventOpen(event) {
+    return event?.manual_status === 'open';
+  }
+
+  function passwordsMatch(password, confirmation) {
+    return String(password ?? '') === String(confirmation ?? '');
+  }
+
   function routeFromPath(pathname, events) {
     const normalized = pathname || '/';
     const staticScreen = STATIC_ROUTES.get(normalized);
@@ -45,5 +53,5 @@
     return screen === 'event' ? base : '/';
   }
 
-  global.APP_RUNTIME = Object.freeze({ isLocalDemoHost, routeFromPath, pathForScreen });
+  global.APP_RUNTIME = Object.freeze({ isLocalDemoHost, isEventOpen, passwordsMatch, routeFromPath, pathForScreen });
 })(globalThis);

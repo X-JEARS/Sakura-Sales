@@ -35,7 +35,7 @@ One `fetch` handler, no router library. Request flow: `/media/*` → R2 passthro
 ### Auth & authorization
 - Passwords: PBKDF2 (SHA-256, 100k iterations, 16-byte salt), format `base64(salt).base64(digest)`. `hashPassword`/`verifyPassword` in worker.js; `scripts/hash-password.mjs` mirrors it for seeding.
 - Sessions: random 32-byte hex token sent as HttpOnly `sid` cookie; only its SHA-256 digest is stored in `sessions` (7-day expiry). `sessionUser` joins `sessions`→`users` and requires `status='active'`.
-- Roles: `super_admin` / `admin` / `event_admin` / `operator`. Guards: `canUseEvent` (super_admin/admin OR `event_members` row), `canManageEvent` (super_admin/admin/event_admin). Only `super_admin` can create/assign `admin`. Users cannot disable their own account or change their own role (enforced in `/users/:id` PATCH).
+- Roles: `super_admin` / `admin` / `event_admin` / `operator`. Guards: `canUseEvent` (super_admin/admin OR `event_members` row), `canManageEvent` (super_admin/admin/event_admin). Only `super_admin` can create/assign `admin`. Users cannot disable their own account or change their own role, and no caller may change a `super_admin` user's role or status (enforced in `/users/:id` PATCH). Password changes require matching confirmation in the frontend before submission.
 
 ### Money model (cross-cuts schema, worker, app.js)
 All amounts are **integer minor units** (`price_minor`, `*_amount_minor`, `threshold_minor`). Frontend converts to major for display/input: `majorAmount = minor/100`, `minorAmount = round(major*100)`. `decorateModal('product'|'gift')` swaps the numeric `*_minor` input for a `*_major` text input plus a hidden `*_minor` input kept in sync on each keystroke — the submitted `FormData` therefore carries the minor value. The `events.currency_scale` column (default 2) exists in schema but the frontend **hardcodes /100**; do not assume JPY-scale (0) works without wiring `currency_scale` through both sides. `currency_unit` lives on the event (CNY/HKD/JPY/USD); `normalizeCurrency`/`currencyUnit` also accept legacy Chinese labels (元/港币/…).
@@ -44,7 +44,7 @@ All amounts are **integer minor units** (`price_minor`, `*_amount_minor`, `thres
 `computeGifts(net, rules)` in worker.js and `calcCart()` in app.js implement the same rule: filter rules with `threshold_minor <= max(0, net)`; `cumulative` mode → `qty = floor(net / threshold)`; `highest` mode → `qty = 1` only for the single highest matched threshold. **The server recomputes from `gift_rules` on order submit and writes name/quantity snapshots to `order_gifts`** — the client calculation is display-only. If you change the rule, update both.
 
 ### Orders & idempotency
-`POST /events/:id/orders` requires `client_request_id` (UNIQUE); a duplicate returns the existing order instead of creating one. Order is rejected unless `event.manual_status === 'open'`. Server re-reads active products to compute line amounts (client-sent prices are not trusted) and batches the order + items + gifts in one `env.DB.batch()`.
+`POST /events/:id/orders` requires `client_request_id` (UNIQUE); a duplicate returns the existing order instead of creating one. Orders are allowed only when `event.manual_status === 'open'`: the frontend disables and guards submission for every other status, and the Worker remains authoritative with a `409` rejection. Server re-reads active products to compute line amounts (client-sent prices are not trusted) and batches the order + items + gifts in one `env.DB.batch()`.
 
 ### Reporting & order details
 The reports screen filters confirmed orders by date, shows net sales, sales, returns, product quantities, return quantities, and gift totals, and exports item-level CSV. CSV amount values are converted from minor units to major units with two decimal places; the currency unit belongs in the amount column header, not in each value. `GET /orders/:id` returns the order together with item and gift snapshots for the order-detail modal.
@@ -75,4 +75,4 @@ Every deploy must bump the PWA cache version **in all three places together**, o
 - `public/app.js` — `navigator.serviceWorker.register('/sw.js?v=N')`
 - `public/sw.js` — `CACHE = 'field-orders-shell-vN'` and matching `?v=N` entries in `SHELL`, including `app-runtime.js`
 
-Then `npm run check && npx wrangler deploy`. Redeploy is data-safe (D1/R2 persist). The current application version is `0.4.0` and the current PWA cache version is `v36`; both are tracked in `DEVELOPMENT.md`.
+Then `npm run check && npx wrangler deploy`. Redeploy is data-safe (D1/R2 persist). The current application version is `0.4.0` and the current PWA cache version is `v38`; both are tracked in `DEVELOPMENT.md`.
