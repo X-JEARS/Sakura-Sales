@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS events (
   id TEXT PRIMARY KEY,
   slug TEXT NOT NULL UNIQUE,
   name TEXT NOT NULL,
-  currency_unit TEXT NOT NULL DEFAULT '元',
+  currency_unit TEXT NOT NULL DEFAULT 'CNY',
   currency_scale INTEGER NOT NULL DEFAULT 2,
   timezone TEXT NOT NULL DEFAULT 'Asia/Shanghai',
   start_at TEXT,

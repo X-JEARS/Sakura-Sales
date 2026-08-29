@@ -1,7 +1,7 @@
 (() => {
   const DEMO = {
     user: { id: 'u1', username: 'admin', display_name: '现场管理员', role: 'admin', locale: 'zh-CN', theme: 'light' },
-    events: [{ id: 'e1', slug: 'summer-market-7f3a91c2', name: '夏日同人展', currency_unit: '元', start_at: '2026-08-28T09:00:00+08:00', end_at: '2026-08-30T18:00:00+08:00', manual_status: 'open' }, { id: 'e2', slug: 'autumn-pop-up', name: '秋季快闪贩售', currency_unit: '元', start_at: '2026-10-01T10:00:00+08:00', end_at: '2026-10-03T18:00:00+08:00', manual_status: 'scheduled' }],
+    events: [{ id: 'e1', slug: 'summer-market-7f3a91c2', name: '夏日同人展', currency_unit: 'CNY', start_at: '2026-08-28T09:00:00+08:00', end_at: '2026-08-30T18:00:00+08:00', manual_status: 'open' }, { id: 'e2', slug: 'autumn-pop-up', name: '秋季快闪贩售', currency_unit: 'CNY', start_at: '2026-10-01T10:00:00+08:00', end_at: '2026-10-03T18:00:00+08:00', manual_status: 'scheduled' }],
     products: [{ id: 'p1', event_id: 'e1', name: '限定徽章套装', price_minor: 1800, emoji: '✦' }, { id: 'p2', event_id: 'e1', name: '插画明信片', price_minor: 800, emoji: '▧' }, { id: 'p3', event_id: 'e1', name: '角色亚克力立牌', price_minor: 3200, emoji: '◇' }, { id: 'p4', event_id: 'e1', name: '帆布袋', price_minor: 4500, emoji: '◫' }, { id: 'p5', event_id: 'e1', name: '贴纸包', price_minor: 600, emoji: '✧' }],
     gifts: [{ id: 'g1', event_id: 'e1', threshold_minor: 5000, gift_name: '限定票根', mode: 'highest' }, { id: 'g2', event_id: 'e1', threshold_minor: 10000, gift_name: '特典海报', mode: 'cumulative' }], orders: []
   };
@@ -22,17 +22,18 @@
   const t = key => (T[state.locale] && T[state.locale][key]) || T['zh-CN'][key] || key;
   const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const CURRENCIES = [
-    { value: '元', label: '人民币（元）' },
-    { value: '港币', label: '港币（港币）' },
-    { value: '日元', label: '日元（日元）' },
-    { value: '美元', label: '美元（美元）' }
+    { value: 'CNY', labels: { 'zh-CN':'人民币（CNY）', 'zh-TW':'人民幣（CNY）', en:'Chinese Yuan (CNY)', ja:'中国人民元（CNY）' } },
+    { value: 'HKD', labels: { 'zh-CN':'港币（HKD）', 'zh-TW':'港幣（HKD）', en:'Hong Kong Dollar (HKD)', ja:'香港ドル（HKD）' } },
+    { value: 'JPY', labels: { 'zh-CN':'日元（JPY）', 'zh-TW':'日圓（JPY）', en:'Japanese Yen (JPY)', ja:'日本円（JPY）' } },
+    { value: 'USD', labels: { 'zh-CN':'美元（USD）', 'zh-TW':'美元（USD）', en:'US Dollar (USD)', ja:'米ドル（USD）' } }
   ];
-  const currencyUnit = unit => CURRENCIES.some(c => c.value === unit) ? unit : '元';
+  const LEGACY_CURRENCY_UNITS = { '元': 'CNY', '人民币': 'CNY', '港币': 'HKD', '日元': 'JPY', '美元': 'USD' };
+  const currencyUnit = unit => { const normalized=LEGACY_CURRENCY_UNITS[unit] || unit; return CURRENCIES.some(c => c.value === normalized) ? normalized : 'CNY'; };
   const majorAmount = minor => (Number(minor || 0) / 100).toFixed(2);
   const minorAmount = major => Math.max(0, Math.round((Number.parseFloat(major) || 0) * 100));
   const moneyForUnit = (minor, unit) => `${majorAmount(minor)} ${currencyUnit(unit)}`;
   const money = minor => moneyForUnit(minor, state.selectedEvent?.currency_unit);
-  const currencySelect = (selected, name = 'currency_unit') => `<select name="${name}">${CURRENCIES.map(c => `<option value="${c.value}" ${currencyUnit(selected)===c.value?'selected':''}>${c.label}</option>`).join('')}</select>`;
+  const currencySelect = (selected, name = 'currency_unit') => `<select name="${name}">${CURRENCIES.map(c => `<option value="${c.value}" ${currencyUnit(selected)===c.value?'selected':''}>${c.labels[state.locale] || c.labels.en}</option>`).join('')}</select>`;
   const amountLabel = (label, unit) => `${label} (${currencyUnit(unit)})`;
   const fmtDate = value => value ? new Intl.DateTimeFormat(state.locale, { month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' }).format(new Date(value)) : '-';
   const eventStatus = e => e.manual_status === 'open' ? 'open' : e.manual_status === 'closed' ? 'closed' : e.manual_status === 'scheduled' ? 'scheduled' : 'draft';
