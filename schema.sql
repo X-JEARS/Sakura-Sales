@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS users (
   display_name TEXT NOT NULL,
   role TEXT NOT NULL CHECK (role IN ('super_admin','admin','event_admin','operator')),
   password_hash TEXT NOT NULL,
-  locale TEXT NOT NULL DEFAULT 'zh-CN',
+  locale TEXT NOT NULL DEFAULT 'system',
   theme TEXT NOT NULL DEFAULT 'light',
   status TEXT NOT NULL DEFAULT 'active',
   created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP

@@ -61,9 +61,11 @@
 ### 国际化与主题
 
 - [x] 五语言支持：zh-CN / zh-TW / zh-HK（粤语） / en / ja
-- [x] 默认跟随浏览器系统语言
+- [x] 默认语言偏好为跟随系统，并按浏览器语言自动解析
+- [x] 设置页提供跟随系统选项，顶栏按钮可快速切换语言
 - [x] 浅色 / 深色 / 跟随系统主题
 - [x] 默认浅色主题
+- [x] 浅色主题颜色说明与 `color-scheme: light` 防止 Android 自动反色
 
 ### 界面交互
 
@@ -184,7 +186,7 @@
 ## 部署备忘
 
 - 每次部署前同步递增三个文件中的缓存版本号：`index.html`（`app.js?v=N`）、`app.js`（`sw.js?v=N`）、`sw.js`（`CACHE` 常量）
-- 当前应用缓存版本：`v24`
+- 当前应用缓存版本：`v25`
 - antd 图标资源生成：`npm run icons:generate`
 - 首次安装依赖或升级图标库后先运行：`npm install`
 - 部署命令：`npm run check && npx wrangler deploy`
