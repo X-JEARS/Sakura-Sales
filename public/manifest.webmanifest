@@ -6,5 +6,12 @@
   "background_color": "#f5f7fb",
   "theme_color": "#f5f7fb",
   "description": "场贩活动订单录入与销售统计 PWA",
-  "icons": []
+  "icons": [
+    {
+      "src": "/sakura.png?v=27",
+      "sizes": "256x256",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
 }
