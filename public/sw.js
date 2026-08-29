@@ -1,5 +1,5 @@
-const CACHE = 'field-orders-shell-v21';
-const SHELL = ['/', '/index.html', '/styles.css', '/styles.css?v=21', '/app.js', '/app.js?v=21', '/manifest.webmanifest'];
+const CACHE = 'field-orders-shell-v22';
+const SHELL = ['/', '/index.html', '/styles.css', '/styles.css?v=22', '/app.js', '/app.js?v=22', '/manifest.webmanifest'];
 self.addEventListener('install', event => event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(SHELL))));
 self.addEventListener('activate', event => event.waitUntil(self.clients.claim()));
 self.addEventListener('fetch', event => {

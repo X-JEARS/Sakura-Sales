@@ -53,3 +53,38 @@ html,body{touch-action:pan-x pan-y}
 @media(max-width:640px){.event-page-head{display:flex;align-items:flex-start}.event-page-head>div{min-width:0}.event-page-head .btn{margin-top:0;flex:0 0 auto}}
 @media(max-width:640px){.event-card-head{align-items:flex-start}.event-card-head h3{white-space:normal}}
 .setting-row{gap:20px}.setting-row input{width:min(280px,52%);border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:7px;padding:10px 11px;outline:none}.setting-row input:focus{border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-soft)}
+
+/* The menu toggle is always available. Desktop/tablet collapse the rail; mobile uses a top overlay. */
+.mobile-menu{display:grid}
+.sidebar{position:sticky;top:0;align-self:flex-start;height:100vh;height:100dvh;overflow-y:auto;transition:width .2s ease,padding .2s ease,transform .2s ease}
+.app-shell.sidebar-collapsed .sidebar{width:0;padding-left:0;padding-right:0;border-right:0;overflow:hidden}
+.app-shell.sidebar-collapsed .workspace{width:100%}
+.sidebar-backdrop{display:none}
+@media(min-width:641px){
+  .sidebar-close{display:none}
+  .sidebar-backdrop{display:none!important}
+}
+@media(max-width:640px){
+  .app-shell.sidebar-collapsed .sidebar{width:100%;padding:25px 16px;border-right:0}
+  .sidebar{display:none;position:fixed;z-index:15;inset:0 0 auto 0;width:100%!important;height:100dvh;max-height:100dvh;overflow-y:auto;transform:translateY(-100%);transition:transform .2s ease}
+  .sidebar.open{display:flex;transform:translateY(0)}
+  .sidebar-close{display:grid;place-items:center}
+  .sidebar-backdrop{display:block;position:fixed;inset:0;background:rgba(10,18,34,.48);opacity:0;pointer-events:none;transition:opacity .18s ease;z-index:14}
+  .sidebar-backdrop.open{opacity:1;pointer-events:auto}
+  body.sidebar-open{overflow:hidden}
+}
+
+/* Keep the event path on its own line so action buttons stay anchored at the card edge. */
+.event-card-footer{flex-direction:column;align-items:stretch;gap:10px}
+.event-card-footer small{display:block;width:100%;white-space:normal;overflow-wrap:anywhere}
+.event-card-actions{width:100%;justify-content:flex-end;flex-wrap:wrap}
+
+/* One consistent, rounded line-icon treatment across navigation and actions. */
+.icon{width:1.1em;height:1.1em;display:inline-block;flex:0 0 auto;vertical-align:-.18em;stroke:currentColor}
+.nav .icon{width:18px;height:18px;vertical-align:middle}
+.btn .icon{width:16px;height:16px}
+.icon-btn .icon{width:18px;height:18px;vertical-align:middle}
+.stepper .icon{width:16px;height:16px;vertical-align:middle}
+.icon-action{display:inline-flex;align-items:center;justify-content:center}
+.icon-action .icon{width:17px;height:17px;margin:0}
+.status-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:currentColor;margin-right:5px;vertical-align:1px}
