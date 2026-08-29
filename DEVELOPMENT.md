@@ -38,6 +38,7 @@
 - [x] 添加商品（名称、价格以分为单位）
 - [x] 编辑商品（活动编辑页内联编辑名称和价格）
 - [x] 商品卡片横向布局（左侧正方形图片占位，右侧名称/价格/数量步进器）
+- [x] 商品网格响应式适配（移动端侧栏收起与平板/桌面侧栏展开分别按卡片最小宽度计算每行数量）
 
 ### 订单录入
 
@@ -174,6 +175,7 @@
 ## 部署备忘
 
 - 每次部署前同步递增三个文件中的缓存版本号：`index.html`（`app.js?v=N`）、`app.js`（`sw.js?v=N`）、`sw.js`（`CACHE` 常量）
+- 当前应用缓存版本：`v11`
 - 部署命令：`npm run check && npx wrangler deploy`
 - 数据库迁移：`npx wrangler d1 execute field-market-orders --remote --file=schema.sql`
 - 密码哈希：`node scripts/hash-password.mjs '<password>'`
