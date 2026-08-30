@@ -29,6 +29,8 @@ There is no linter or bundler. `npm test` runs the focused Node test suite, whil
 ### Rendering model (app.js)
 Single IIFE holding a `state` object. `render()` rewrites `#app.innerHTML` from `state` and `bindEvents()` re-attaches all handlers — there is no virtual DOM or diffing. `syncCheckout()` is the one partial-update path (patches only the checkout bar during stepper input); if you touch cart logic, keep it in sync with `checkoutBarHTML()`. `public/app-runtime.js` owns pure route, event-state, and password-confirmation helpers; `app.js` uses History API `pushState`/`popstate` for event, edit, reports, orders, accounts, audit, and settings routes.
 
+Sales product cards keep a fixed information-column height (56px on desktop/tablet, 52px on phones). Titles are limited to two lines and align with the image top; prices align with the image bottom. The quantity stepper follows the card content with a 12px gap on desktop/tablet and 10px on phones. Product images in the sales view open a larger preview when clicked.
+
 ### Worker (worker.js)
 One `fetch` handler, no router library. Request flow: `/media/*` → R2 passthrough (cached immutable); non-`/api/*` → `env.ASSETS` with SPA fallback to `/index.html`; `/api/*` → strip prefix, then a dense `if (path === ... && method === ...) return ...` chain using regex matches for parameterized routes. All `/api/*` routes (except `/auth/login`) require `sessionUser()`. Keep this single-file, inline style — it is intentional.
 
@@ -38,7 +40,7 @@ One `fetch` handler, no router library. Request flow: `/media/*` → R2 passthro
 - Roles: `super_admin` / `admin` / `event_admin` / `operator`. Guards: `canUseEvent` (super_admin/admin OR `event_members` row), `canManageEvent` (super_admin/admin/event_admin). Only `super_admin` can create/assign `admin`. Users cannot disable their own account or change their own role, and no caller may change a `super_admin` user's role or status (enforced in `/users/:id` PATCH). Password changes require matching confirmation in the frontend before submission.
 
 ### Money model (cross-cuts schema, worker, app.js)
-All amounts are **integer minor units** (`price_minor`, `*_amount_minor`, `threshold_minor`). Frontend converts to major for display/input: `majorAmount = minor/100`, `minorAmount = round(major*100)`. `decorateModal('product'|'gift')` swaps the numeric `*_minor` input for a `*_major` text input plus a hidden `*_minor` input kept in sync on each keystroke — the submitted `FormData` therefore carries the minor value. The `events.currency_scale` column (default 2) exists in schema but the frontend **hardcodes /100**; do not assume JPY-scale (0) works without wiring `currency_scale` through both sides. `currency_unit` lives on the event (CNY/HKD/JPY/USD); `normalizeCurrency`/`currencyUnit` also accept legacy Chinese labels (元/港币/…).
+All amounts are **integer minor units** (`price_minor`, `*_amount_minor`, `threshold_minor`). Frontend converts to major for display/input using the event scale: `majorAmount = minor / (10 ** currency_scale)`, `minorAmount = round(major * 10 ** currency_scale)`. `decorateModal('product'|'gift')` swaps the numeric `*_minor` input for a `*_major` text input plus a hidden `*_minor` input kept in sync on each keystroke — the submitted `FormData` therefore carries the minor value. `events.currency_scale` (default 2) is wired through event creation/editing, product and gift forms, cart display, reports, and Worker order handling. `currency_unit` supports CNY/HKD/JPY/USD/GBP/KRW/AUD/TWD; JPY, KRW, and TWD use 0 decimal places by default, while GBP and AUD use 2. `normalizeCurrency`/`currencyUnit` also accept legacy Chinese labels (元/港币/…).
 
 ### Gift computation (duplicated, server-authoritative)
 `computeGifts(net, rules)` in worker.js and `calcCart()` in app.js implement the same rule: filter rules with `threshold_minor <= max(0, net)`; `cumulative` mode → `qty = floor(net / threshold)`; `highest` mode → `qty = 1` only for the single highest matched threshold. **The server recomputes from `gift_rules` on order submit and writes name/quantity snapshots to `order_gifts`** — the client calculation is display-only. If you change the rule, update both.
@@ -47,7 +49,7 @@ All amounts are **integer minor units** (`price_minor`, `*_amount_minor`, `thres
 `POST /events/:id/orders` requires `client_request_id` (UNIQUE); a duplicate returns the existing order instead of creating one. Orders are allowed only when `event.manual_status === 'open'`: the frontend disables and guards submission for every other status, and the Worker remains authoritative with a `409` rejection. Server re-reads active products to compute line amounts (client-sent prices are not trusted) and batches the order + items + gifts in one `env.DB.batch()`.
 
 ### Reporting & order details
-The reports screen filters confirmed orders by date, shows net sales, sales, returns, product quantities, return quantities, and gift totals, and exports item-level CSV. CSV amount values are converted from minor units to major units with two decimal places; the currency unit belongs in the amount column header, not in each value. `GET /orders/:id` returns the order together with item and gift snapshots for the order-detail modal.
+The reports screen filters confirmed orders by date, shows net sales, sales, returns, product quantities, return quantities, and gift totals, and exports item-level CSV. CSV amount values are converted from minor units to the event's major unit using `currency_scale`; the currency unit belongs in the amount column header, not in each value. `GET /orders/:id` returns the order together with item and gift snapshots for the order-detail modal.
 
 ### Event deletion
 `DELETE /events/:id` is restricted to `super_admin` and `admin` and permanently removes the event plus its orders, order items, gifts, products, event members, and audit logs. This is the intentional exception to the soft-delete rules below; the UI exposes the destructive action only on the event edit screen.
@@ -59,13 +61,13 @@ Products (`active=0`) and gift rules (`active=0`) are never hard-deleted. Cancel
 Event cards do not display the event URL as text. The `enter` action is on the right, with data/reports, edit, and copy-link actions to its left; destructive event deletion is available from the edit screen only.
 
 ### Images (R2)
-Uploaded via `POST /events/:id/images` (raw body, content-type derived extension, ≤5MB, JPG/PNG/WebP/GIF) to key `events/{eventId}/{uuid}.{ext}`, served from `/media/{key}`. Editing a product's image and `remove-image` both delete the prior R2 object via `r2Key()` (best-effort `.catch(()=>{})`). The `uploadImage` helper falls back to a `FileReader` data URL when the API is unreachable (demo mode).
+Uploaded via `POST /events/:id/images` (raw body, content-type derived extension, ≤5MB, JPG/PNG/WebP/GIF) to key `events/{eventId}/{uuid}.{ext}`, served from `/media/{key}`. Editing a product's image and `remove-image` both delete the prior R2 object via `r2Key()` (best-effort `.catch(()=>{})`). The `uploadImage` helper falls back to a `FileReader` data URL when the API is unreachable (demo mode). In the sales view, clicking a product image opens a larger preview modal.
 
 ### Icons
 `public/antd-icons.js` is **generated** (`npm run icons:generate`) from `antd-mobile-icons` and exposes `window.ANTD_ICONS` (48×48 viewBox). `icon(name)` in app.js prefers `window.ANTD_ICONS[name]` and falls back to an inline 24×24 SVG `paths` map. To add a one-off icon, add it to the inline `paths` map — no regeneration needed. The generated file uses `fill="currentColor"`; the inline fallbacks use `stroke="currentColor"`.
 
 ### i18n & theme
-Five locales (zh-CN/zh-TW/zh-HK/en/ja) in two objects: `T` (core) and `EXTRA` (management strings), merged at load. zh-HK spreads zh-TW then overrides local wording. `t(key)` falls back to zh-CN then the raw key. When adding a visible string, add it to **all five** locale entries in both `T` and `EXTRA` as applicable. Theme (light/dark/system) sets `data-theme` on `<html>` and syncs `<meta name="theme-color">` from the computed `--bg` CSS var.
+Six locales (zh-CN/zh-TW/zh-HK/en/ja/ko) in two objects: `T` (core) and `EXTRA` (management strings), merged at load. zh-HK spreads zh-TW then overrides local wording. `t(key)` falls back to zh-CN then the raw key. When adding a visible string, add it to **all six** locale entries in both `T` and `EXTRA` as applicable. The top-bar language control opens a small selection dialog instead of cycling languages. Theme (light/dark/system) sets `data-theme` on `<html>` and syncs `<meta name="theme-color">` from the computed `--bg` CSS var.
 
 ## Deploy checklist
 
@@ -75,4 +77,4 @@ Every deploy must bump the PWA cache version **in all three places together**, o
 - `public/app.js` — `navigator.serviceWorker.register('/sw.js?v=N')`
 - `public/sw.js` — `CACHE = 'field-orders-shell-vN'` and matching `?v=N` entries in `SHELL`, including `app-runtime.js`
 
-Then `npm run check && npm test && npx wrangler deploy`. Redeploy is data-safe (D1/R2 persist). The current application version is `0.4.0` and the current PWA cache version is `v39`; both are tracked in `DEVELOPMENT.md`.
+Then `npm run check && npm test && npx wrangler deploy`. Redeploy is data-safe (D1/R2 persist). The current application version is `1.0.0` and the current PWA cache version is `v49`; both are tracked in `DEVELOPMENT.md`.
