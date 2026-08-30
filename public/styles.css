@@ -9,15 +9,15 @@
 
 /* Product cards use a compact media row and a full-width quantity row. */
 .product-grid{--product-card-min:calc(2px + 24px + 56px + 10px + 84px);grid-template-columns:repeat(auto-fill,minmax(min(100%,var(--product-card-min)),1fr))}
-.product-card{min-width:0;padding:12px;display:flex;flex-direction:column;gap:10px}
-.product-card-main{display:flex;align-items:flex-start;gap:10px;min-width:0;min-height:56px}
+.product-card{min-width:0;padding:12px;display:flex;flex-direction:column;gap:12px}
+.product-card-main{display:flex;align-items:stretch;gap:10px;min-width:0;min-height:56px}
 .product-img-square{width:56px;min-width:56px;height:56px;aspect-ratio:auto;align-self:flex-start;border-radius:6px;font-size:22px}
-.product-info{padding:2px 0 0;min-width:84px;display:flex;flex:1;flex-direction:column;gap:4px}
-.product-name{line-height:1.3}
-.product-price{margin-top:0;line-height:1.3}
+.product-info{padding:0;min-width:84px;width:0;height:56px;min-height:56px;max-height:56px;display:flex;flex:1;flex-direction:column;justify-content:space-between;gap:4px}
+.product-name{line-height:1.3;min-height:2.6em;white-space:normal;overflow:hidden;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow-wrap:anywhere;position:relative;top:-2px}
+.product-price{margin-top:auto;line-height:1.3;position:relative;bottom:calc(0.8em - 6px)}
 .stepper{width:100%;min-width:0;margin-top:0}
 .stepper button{flex:0 0 35px}
-@media(max-width:640px){.product-grid{--product-card-min:calc(2px + 20px + 52px + 8px + 78px);grid-template-columns:repeat(auto-fill,minmax(min(100%,var(--product-card-min)),1fr));gap:10px}.product-card{padding:10px;gap:8px}.product-card-main{gap:8px;min-height:52px}.product-img-square{width:52px;min-width:52px;height:52px}.product-info{min-width:78px;padding-top:1px}}
+@media(max-width:640px){.product-grid{--product-card-min:calc(2px + 20px + 52px + 8px + 78px);grid-template-columns:repeat(auto-fill,minmax(min(100%,var(--product-card-min)),1fr));gap:10px}.product-card{padding:10px;gap:10px}.product-card-main{gap:8px;min-height:52px}.product-img-square{width:52px;min-width:52px;height:52px}.product-info{min-width:78px;height:52px;min-height:52px;max-height:52px;padding-top:0}.product-price{bottom:calc(0.8em - 2px)}}
 
 /* Keep the main chrome visible while page content scrolls. */
 .workspace{display:flex;flex-direction:column;min-height:100vh}
@@ -65,14 +65,24 @@ html,body{touch-action:pan-x pan-y}
   .sidebar-backdrop{display:none!important}
 }
 @media(max-width:640px){
-  .app-shell.sidebar-collapsed .sidebar{width:100%;padding:25px 16px;border-right:0}
-  .sidebar{display:none;position:fixed;z-index:15;inset:0 0 auto 0;width:100%!important;height:100dvh;max-height:100dvh;overflow-y:auto;transform:translateY(-100%);transition:transform .2s ease}
-  .sidebar.open{display:flex;transform:translateY(0)}
+  .app-shell.sidebar-collapsed .sidebar{width:210px;padding:25px 16px;border-right:1px solid var(--line)}
+  .sidebar{display:none;position:fixed;z-index:15;inset:0 auto 0 0;width:210px!important;height:100dvh;max-height:100dvh;overflow-y:auto;transform:translateX(-100%);transition:transform .2s ease}
+  .sidebar.open{display:flex;transform:translateX(0)}
   .sidebar-close{display:grid;place-items:center}
   .sidebar-backdrop{display:block;position:fixed;inset:0;background:rgba(10,18,34,.48);opacity:0;pointer-events:none;transition:opacity .18s ease;z-index:14}
   .sidebar-backdrop.open{opacity:1;pointer-events:auto}
   body.sidebar-open{overflow:hidden}
 }
+
+.locale-popover{position:fixed;z-index:30;min-width:148px;padding:6px;background:var(--surface);border:1px solid var(--line);border-radius:8px;box-shadow:var(--shadow);display:grid;gap:2px}
+.locale-popover button{padding:9px 11px;border-radius:6px;text-align:left;background:transparent;color:var(--text);font-size:13px}
+.locale-popover button:hover,.locale-popover button.active{background:var(--primary-soft);color:var(--primary);font-weight:700}
+
+.product-img-square[data-action="view-image"]{padding:0;border:0}
+.product-img-square[data-action="view-image"]:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
+.image-preview-modal{width:min(900px,100%);max-height:calc(100vh - 40px);display:flex;flex-direction:column;gap:16px;padding:16px}
+.image-preview-modal img{display:block;width:100%;height:auto;max-height:calc(100vh - 130px);object-fit:contain;border-radius:6px;background:var(--surface-alt)}
+.image-preview-modal .modal-actions{justify-content:flex-end}
 
 /* Keep the event path on its own line so action buttons stay anchored at the card edge. */
 .event-card-footer{flex-direction:column;align-items:stretch;gap:10px}

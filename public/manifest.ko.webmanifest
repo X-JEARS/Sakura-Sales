@@ -1,12 +1,12 @@
 {
-  "name": "Sakura Sales",
-  "short_name": "Sakura Sales",
-  "lang": "en",
+  "name": "사쿠라 판매",
+  "short_name": "사쿠라 판매",
+  "lang": "ko",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#f5f7fb",
   "theme_color": "#f5f7fb",
-  "description": "Sakura Sales order entry and sales statistics for on-site events",
+  "description": "현장 이벤트 주문 입력 및 판매 통계 앱",
   "icons": [{
     "src": "/sakura.png?v=49",
     "sizes": "256x256",

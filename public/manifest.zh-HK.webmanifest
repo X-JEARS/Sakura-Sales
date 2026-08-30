@@ -8,7 +8,7 @@
   "theme_color": "#f5f7fb",
   "description": "櫻花場販活動落單及銷售統計應用程式",
   "icons": [{
-    "src": "/sakura.png?v=40",
+    "src": "/sakura.png?v=49",
     "sizes": "256x256",
     "type": "image/png",
     "purpose": "any maskable"
