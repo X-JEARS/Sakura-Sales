@@ -4,17 +4,37 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
   <meta name="theme-color" content="#f5f7fb" />
-  <link rel="icon" type="image/png" href="/sakura.png?v=38" />
-  <link rel="apple-touch-icon" href="/sakura.png?v=38" />
-  <link rel="manifest" href="/manifest.webmanifest?v=38" />
-  <link rel="stylesheet" href="/styles.css?v=38" />
-  <title>场贩订单台</title>
+  <link rel="icon" type="image/png" href="/sakura.png?v=39" />
+  <link rel="apple-touch-icon" href="/sakura.png?v=39" />
+  <script>
+    (() => {
+      const manifestLocale = language => {
+        const value = String(language || '').toLowerCase();
+        if (value.startsWith('zh-hk') || value.startsWith('zh-mo')) return 'zh-HK';
+        if (value.startsWith('zh-tw')) return 'zh-TW';
+        if (value.startsWith('zh')) return 'zh-CN';
+        if (value.startsWith('ja')) return 'ja';
+        if (value.startsWith('en')) return 'en';
+        return 'zh-CN';
+      };
+      const hrefFor = locale => `/manifest.${manifestLocale(locale)}.webmanifest?v=39`;
+      const savedLocale = localStorage.getItem('locale');
+      const initialLanguage = savedLocale && savedLocale !== 'system' ? savedLocale : navigator.language;
+      document.write(`<link id="app-manifest" rel="manifest" href="${hrefFor(initialLanguage)}" />`);
+      window.setManifestLocale = locale => {
+        const link = document.getElementById('app-manifest');
+        if (link) link.href = hrefFor(locale);
+      };
+    })();
+  </script>
+  <link rel="stylesheet" href="/styles.css?v=39" />
+  <title>樱花场贩</title>
 </head>
 <body>
   <div id="app"></div>
   <div id="toast" class="toast" role="status"></div>
-  <script src="/antd-icons.js?v=38"></script>
-  <script src="/app-runtime.js?v=38"></script>
-  <script src="/app.js?v=38"></script>
+  <script src="/antd-icons.js?v=39"></script>
+  <script src="/app-runtime.js?v=39"></script>
+  <script src="/app.js?v=39"></script>
 </body>
 </html>

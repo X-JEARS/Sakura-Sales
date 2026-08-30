@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-场贩订单台 (Field Market Orders) — an order-entry and sales-statistics PWA for on-site event staff, built entirely on Cloudflare (Workers + D1 + R2 + KV + static assets). No external server. Staff (not customers) enter orders; admins manage events, products, and accounts. No public registration — all accounts are created internally by admins.
+樱花场贩 (Sakura Sales) — an order-entry and sales-statistics PWA for on-site event staff, built entirely on Cloudflare (Workers + D1 + R2 + KV + static assets). No external server. Staff (not customers) enter orders; admins manage events, products, and accounts. No public registration — all accounts are created internally by admins.
 
 ## Commands
 
@@ -75,4 +75,4 @@ Every deploy must bump the PWA cache version **in all three places together**, o
 - `public/app.js` — `navigator.serviceWorker.register('/sw.js?v=N')`
 - `public/sw.js` — `CACHE = 'field-orders-shell-vN'` and matching `?v=N` entries in `SHELL`, including `app-runtime.js`
 
-Then `npm run check && npm test && npx wrangler deploy`. Redeploy is data-safe (D1/R2 persist). The current application version is `0.4.0` and the current PWA cache version is `v38`; both are tracked in `DEVELOPMENT.md`.
+Then `npm run check && npm test && npx wrangler deploy`. Redeploy is data-safe (D1/R2 persist). The current application version is `0.4.0` and the current PWA cache version is `v39`; both are tracked in `DEVELOPMENT.md`.

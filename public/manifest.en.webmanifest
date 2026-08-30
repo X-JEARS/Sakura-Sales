@@ -1,0 +1,16 @@
+{
+  "name": "Sakura Sales",
+  "short_name": "Sakura Sales",
+  "lang": "en",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f5f7fb",
+  "theme_color": "#f5f7fb",
+  "description": "Sakura Sales order entry and sales statistics for on-site events",
+  "icons": [{
+    "src": "/sakura.png?v=39",
+    "sizes": "256x256",
+    "type": "image/png",
+    "purpose": "any maskable"
+  }]
+}

@@ -7,12 +7,10 @@
   "background_color": "#f5f7fb",
   "theme_color": "#f5f7fb",
   "description": "樱花场贩活动订单录入与销售统计应用",
-  "icons": [
-    {
-      "src": "/sakura.png?v=39",
-      "sizes": "256x256",
-      "type": "image/png",
-      "purpose": "any maskable"
-    }
-  ]
+  "icons": [{
+    "src": "/sakura.png?v=39",
+    "sizes": "256x256",
+    "type": "image/png",
+    "purpose": "any maskable"
+  }]
 }

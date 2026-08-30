@@ -1,5 +1,5 @@
-const CACHE = 'field-orders-shell-v38';
-const SHELL = ['/', '/index.html', '/styles.css', '/styles.css?v=38', '/app-runtime.js', '/app-runtime.js?v=38', '/app.js', '/app.js?v=38', '/antd-icons.js', '/antd-icons.js?v=38', '/manifest.webmanifest', '/manifest.webmanifest?v=38', '/sakura.png', '/sakura.png?v=38'];
+const CACHE = 'field-orders-shell-v39';
+const SHELL = ['/', '/index.html', '/styles.css', '/styles.css?v=39', '/app-runtime.js', '/app-runtime.js?v=39', '/app.js', '/app.js?v=39', '/antd-icons.js', '/antd-icons.js?v=39', '/manifest.webmanifest', '/manifest.webmanifest?v=39', '/manifest.zh-CN.webmanifest?v=39', '/manifest.zh-TW.webmanifest?v=39', '/manifest.zh-HK.webmanifest?v=39', '/manifest.en.webmanifest?v=39', '/manifest.ja.webmanifest?v=39', '/sakura.png', '/sakura.png?v=39'];
 self.addEventListener('install', event => event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(SHELL))));
 self.addEventListener('activate', event => event.waitUntil(self.clients.claim()));
 self.addEventListener('fetch', event => {

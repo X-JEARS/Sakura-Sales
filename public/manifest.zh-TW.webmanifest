@@ -1,0 +1,16 @@
+{
+  "name": "櫻花場販",
+  "short_name": "櫻花場販",
+  "lang": "zh-TW",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f5f7fb",
+  "theme_color": "#f5f7fb",
+  "description": "櫻花場販活動訂單輸入與銷售統計應用程式",
+  "icons": [{
+    "src": "/sakura.png?v=39",
+    "sizes": "256x256",
+    "type": "image/png",
+    "purpose": "any maskable"
+  }]
+}

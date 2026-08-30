@@ -1,4 +1,4 @@
-# 场贩订单台 (Field Market Orders)
+# 樱花场贩 (Sakura Sales)
 
 一个面向场贩（现场贩售活动）的订单录入与统计 PWA，全部基于 Cloudflare 服务实现，无需额外云服务器。
 
@@ -27,7 +27,12 @@ offline-order-website/
 │   ├── app-runtime.js      # 路由、状态与表单校验辅助
 │   ├── styles.css          # 全部样式（含暗色主题）
 │   ├── sw.js               # Service Worker
-│   └── manifest.webmanifest
+│   ├── manifest.webmanifest       # 默认（简体中文）安装名称
+│   ├── manifest.zh-CN.webmanifest # 简体中文安装名称
+│   ├── manifest.zh-TW.webmanifest # 繁体中文安装名称
+│   ├── manifest.zh-HK.webmanifest # 香港繁体安装名称
+│   ├── manifest.en.webmanifest    # English 安装名称
+│   └── manifest.ja.webmanifest    # 日本語インストール名
 ├── worker.js               # Cloudflare Worker API
 ├── schema.sql              # D1 数据库建表语句
 ├── scripts/

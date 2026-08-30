@@ -2,13 +2,13 @@
 
 ## 项目概述
 
-场贩订单台 —— 面向现场贩售活动工作人员的订单录入与统计 PWA，全部基于 Cloudflare 服务（Workers + D1 + R2 + KV），不额外部署云服务器。
+樱花场贩（Sakura Sales）——面向现场贩售活动工作人员的订单录入与统计 PWA，全部基于 Cloudflare 服务（Workers + D1 + R2 + KV），不额外部署云服务器。
 
 ## 文档核对记录（2026-08-30）
 
 - 对照 `public/app.js`、`worker.js`、`schema.sql` 检查 v0.2.0 功能，满赠管理、图片上传/删除、用户管理、多货币和订单满赠快照均已在文档中标记完成。
 - 对照当前代码检查待完善项，审计日志、商品排序和订单打印已在 v0.4.0 完整实现；活动克隆仍待开发。
-- 当前应用版本为 `0.4.0`，PWA 缓存版本为 `v38`。
+- 当前应用版本为 `0.4.0`，PWA 缓存版本为 `v39`。
 
 ---
 
@@ -153,7 +153,7 @@
 ## 部署备忘
 
 - 每次部署前同步递增缓存版本号：`index.html`（静态资源 `?v=N`）、`app.js`（`sw.js?v=N`）、`sw.js`（`CACHE` 常量及 `SHELL` 资源）
-- 当前应用缓存版本：`v38`
+- 当前应用缓存版本：`v39`
 - antd 图标资源生成：`npm run icons:generate`
 - 首次安装依赖或升级图标库后先运行：`npm install`
 - 部署命令：`npm run check && npm test && npx wrangler deploy`
