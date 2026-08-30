@@ -9,7 +9,7 @@
   "description": "樱花场贩活动订单录入与销售统计应用",
   "icons": [
     {
-      "src": "/sakura.png?v=39",
+      "src": "/sakura.png?v=40",
       "sizes": "256x256",
       "type": "image/png",
       "purpose": "any maskable"

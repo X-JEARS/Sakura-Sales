@@ -8,7 +8,7 @@
   "theme_color": "#f5f7fb",
   "description": "現場イベントの注文入力と売上集計アプリ",
   "icons": [{
-    "src": "/sakura.png?v=39",
+    "src": "/sakura.png?v=40",
     "sizes": "256x256",
     "type": "image/png",
     "purpose": "any maskable"

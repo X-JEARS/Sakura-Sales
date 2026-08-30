@@ -79,7 +79,7 @@ html,body{touch-action:pan-x pan-y}
 .event-card-footer small{display:block;width:100%;white-space:normal;overflow-wrap:anywhere}
 .event-card-actions{width:100%;justify-content:flex-end;flex-wrap:wrap}
 .event-card-actions .btn-primary{order:0;flex:0 0 auto}
-.event-delete-edit{margin-left:8px}
+.event-delete-edit,.event-clone-edit{margin-left:8px}
 .reports-page-head{align-items:center}
 .reports-heading{display:flex;align-items:baseline;gap:12px;min-width:0}
 .reports-heading h2{margin:0;white-space:nowrap}

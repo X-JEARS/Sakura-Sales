@@ -1,5 +1,5 @@
-const CACHE = 'field-orders-shell-v39';
-const SHELL = ['/', '/index.html', '/styles.css', '/styles.css?v=39', '/app-runtime.js', '/app-runtime.js?v=39', '/app.js', '/app.js?v=39', '/antd-icons.js', '/antd-icons.js?v=39', '/manifest.webmanifest', '/manifest.webmanifest?v=39', '/manifest.zh-CN.webmanifest?v=39', '/manifest.zh-TW.webmanifest?v=39', '/manifest.zh-HK.webmanifest?v=39', '/manifest.en.webmanifest?v=39', '/manifest.ja.webmanifest?v=39', '/sakura.png', '/sakura.png?v=39'];
+const CACHE = 'field-orders-shell-v40';
+const SHELL = ['/', '/index.html', '/styles.css', '/styles.css?v=40', '/app-runtime.js', '/app-runtime.js?v=40', '/app.js', '/app.js?v=40', '/antd-icons.js', '/antd-icons.js?v=40', '/manifest.webmanifest', '/manifest.webmanifest?v=40', '/manifest.zh-CN.webmanifest?v=40', '/manifest.zh-TW.webmanifest?v=40', '/manifest.zh-HK.webmanifest?v=40', '/manifest.en.webmanifest?v=40', '/manifest.ja.webmanifest?v=40', '/sakura.png', '/sakura.png?v=40'];
 self.addEventListener('install', event => event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(SHELL))));
 self.addEventListener('activate', event => event.waitUntil(self.clients.claim()));
 self.addEventListener('fetch', event => {
